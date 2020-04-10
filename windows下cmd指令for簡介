@@ -1,0 +1,147 @@
+windows下cmd指令for簡介
+基本型
+For %variable IN (set) DO 命令 [command-parameters]
+ %variable			指定一個可以取代的參數。
+ (set)				指定由一或多個檔案組成的檔案組。您可使用通配字元。
+ command			指定命令來執行每一個檔案。
+ command-parameters	為所指定的命令指定變數或參數。
+
+以上指令，說的簡單一些
+
+For 變數名稱 IN (目標) DO 要下的指令 變數名稱
+例1:
+For %i in (monkey dog bird) do @echo I love %i
+這段意思就是
+印出(echo) I love 變數 ，也就是monkey、dog、bird  3個變數
+結果就是
+I love monkey
+I love dog
+I love bird
+
+例2:
+For %i IN (d:\*) DO @echo %i
+這段的意思就是:
+變數是 %i，我要印出echo的%i，目標是d:\
+
+結果就是印出D:\下所有的檔案名稱，"@"是不印出echo這個指令名稱
+
+要注意的是如果是寫入批次檔內，變數名稱前要多一個%，所以上面這行寫到批次檔內要寫成
+For %%i IN (d:\*) DO @echo %%i
+
+例3:印出D:\下所有的txt檔
+For %i IN (d:\*.txt) DO @echo %i
+
+假設以上指令下的時候還會出現像是C:\>夾雜在資料中間可以
+多下一個指令為 : echo off 
+就可以隱藏C:\>
+
+
+除了基本的以外，如果有啟用擴充命令還有其他用法，如
+
+一、
+For /D %variable IN (set) DO command  [command-parameters]
+如果 set 中包含萬用字元，則指定與目錄名稱相符，而不是與檔案名稱相符。
+例1:
+For /D %i in (*) do echo %i
+結果就是列出所有的目錄
+
+例2:
+For /D %i in (*g*) do echo %i
+結果就是列出所有含g的目錄
+
+二、
+For /R [[drive:]path] %variable IN (set) DO command  [command-parameters]
+‧ 在樹狀目錄中切換 [drive:]路徑，並於樹狀目錄的每一個目錄下執行For 陳述式。
+‧ 如果未在 /R 之後指定目錄規格，則採用目前的目錄。
+‧ 如果 set 只是單一句點 (.) 字元，則它只會列舉樹狀目錄結構。
+
+例1:
+For /r %i in (.) do @echo %i
+未指定時就是當前目錄，
+列出所有當前目錄下的全部子目錄路徑
+
+例2:
+For /r d:\test %i in (.) do @echo %i
+列出所有d:\test這個目錄下的全部子目錄路徑
+
+三、
+For /L %variable IN (start,step,end) DO command [command-parameters]
+普通的迴圈，
+start:起始値
+step:間隔值
+end:結束值
+例1:
+for /l %i in (1,1,10) do @echo %i
+結果就是依序印出1、2、3、4..... 、10
+
+四、
+For /F ["options"] %variable IN (file-set) DO command [command-parameters]
+For /F ["options"] %variable IN ("string") DO command [command-parameters]
+For /F ["options"] %variable IN ('command') DO command [command-parameters]
+
+["options"]有幾種設定
+1.
+eol=c				- 指定一個註解字元(只有一個字元)
+使用這參數會略過有c參數的字
+例1:
+檔案內的文字
+D:\test\aa\tt\5.tar.gz 
+D:\test\aa\1.tar.gz 
+;D:\aaaaaaaaaaaaa
+D:\test\aa\1.tar.gz 
+D:\test\aa\tt\5.tar.gz D:\
+
+指令下
+for /f "eol=;" %i in (list.txt) do @echo %i
+就不會印出";D:\aaaaaaaaaaaaa"，相當於把;當做註解字元
+
+2.
+skip=n				- 指定在檔案開頭要掠過的行數。
+
+3.
+delims=xxx			- 指定分隔符號的集合。這會取代預設的空白與定位字元的分隔符號集合。簡單來說就是分割字串的符號，如果未指定的話，預設是空白字元。基本上會跟tokens合用，這下一點會說到
+例1:
+for /f "tokens=1,2" %i in (list.txt) do @echo %i
+內容是
+aaaaaaaaaaaaaaaaaaaa,bbbbbbbbbbbbbbb,ajklf,cccccccccc,sssss
+delims=,的時候就會分割成5個字串，分別是
+aaaaaaaaaaaaaaaaaaaa
+bbbbbbbbbbbbbbb
+ajklf
+cccccccccc
+sssss
+
+但是本例只會顯示aaaaaaaaaaaaaaaaaaaa，這下一點會提到
+
+4.
+tokens=x,y,m-n   - 指定每一行的哪些文字串應該被傳到 For 的內部以用來進行每一個重複操作。這會導致額外的變數名稱被配置。m-n 格式代表一個範圍，指定了第 m 個到第 n 個字串項。如果在 tokens= 字串的最後一個字元是星號，則會配置一個額外的變數來接收最後一個字串項被分析後的其他文字。
+
+例1:
+for /f "tokens=1,2" %i in (list.txt) do @echo %i %j
+內容是
+aaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbb ajklf cccccccccc sssss
+
+則會顯示
+aaaaaaaaaaaaaaaaaaaa
+bbbbbbbbbbbbbbb
+
+要注意顯示幾個token後面就要加幾個%n參數，沒加就不顯示
+
+例2:
+
+for /f "tokens=2,4 delims=," %i in (list.txt) do @echo %i %j
+內容是
+aaaaaaaaaaaaaaaaaaaa,bbbbbbbbbbbbbbb,ajklf,cccccccccc,sssss
+則會顯示
+bbbbbbbbbbbbbbb
+cccccccccc
+例3:
+for /f "tokens=2,* delims=," %i in (list.txt) do @echo %i %j
+內容是
+aaaaaaaaaaaaaaaaaaaa,bbbbbbbbbbbbbbb,ajklf,cccccccccc,sssss
+則會顯示
+bbbbbbbbbbbbbbb
+ajklf,cccccccccc,sssss
+
+5.
+usebackq           - 指定新語義開始作用。其中反括號(`，esc下面那個鍵)的字串會被當作命令來執行，而單引號字串是純文字字串。此外還允許使用雙引號來引用在 filenameset 內的檔名。
