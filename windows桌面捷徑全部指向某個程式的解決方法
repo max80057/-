@@ -1,0 +1,8 @@
+桌面捷徑全部指向.pdf 或是其他的解決方法
+
+1.開始=>執行=>輸入 regedit,開啟登入檔編輯程式
+2.點開下面路徑 HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts, 展開 FileExts 資料夾，以下各個子資料夾即是存放各種副檔名設定值的地方
+3.把.lnk的資料夾砍掉
+4.重開機
+
+PS:這應該是點到什麼東西中招，被改了登入檔的設定，最佳解決辦法還是不要亂點
