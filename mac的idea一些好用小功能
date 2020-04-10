@@ -1,0 +1,49 @@
+1.自動規格化
+反白你需要格式化的code(或是不反白，直接對全部的code)然後使用下面的指定，他會自己幫你做排版，當然小部分不滿意的還是要自己排，但是我個人感覺排版相當不錯，很清晰。
+cmd + option +L
+
+PS:有時候html的table部分會炸裂，謹慎使用
+
+2.快捷鍵
+cmd + j
+
+可以看一下可使用的快捷鍵，下面舉幾個例子
+直接打fori 然後再按一下tab，他會出現
+for (int i = 0; i < ; i++) {
+    
+}
+或是你直接打ifn +tab
+if ( == null) {
+    
+}
+null前面會有妳目前有宣告可使用的參數，當然有等於null就有不等於
+指令是這樣的 inn + tab
+if ( != null) {
+    
+}
+
+快捷鍵還可以設定，在內容的部份的keymap，不過快捷相當多，可能要找一下你要的功能……
+
+自動生成code
+在class裡面頗常會寫到get & set的方法或是你要override，可以使用下面指令，然後選擇妳生成的code。或是使用右鍵選擇也可以
+cmd + N
+然後選擇方法，假設是選擇get & set
+如後我現在有宣告三個參數
+String name="";
+String place="";
+int age=1;
+然後選擇妳要get &set 的已宣告參數，選擇name的話
+最後就會出現這樣
+public String getName(){return name}
+public String setName(String name){this.name=name}
+
+4.書籤
+可以在idea在coding左邊灰色處點cmd + 滑鼠左鍵
+他會出現一個黑色勾勾
+
+接著指令用fn + cmd + F3會出現你有做過記號的所有地方，可以快速地切過去，因為有時候你可能開太多的頁面，或是code比較多的class，你會一直去找某個method，找完以後要回到你剛看的地方可能就需要找，這個書籤就可以幫助你。
+
+5.快速的看svn上code的紀錄
+假設你有上傳svn的話，可以在idea在coding左邊灰色處點cmd + 滑鼠右鍵
+他就會顯示每一行上一個修改人跟修改日期
+點開以後還可以看該版本的訊息
